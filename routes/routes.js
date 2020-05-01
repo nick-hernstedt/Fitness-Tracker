@@ -1,13 +1,16 @@
-// require exprss and pass the route directly on
+//requiring express and passing the router directly on instead of adding another variable
 const router = require("express").Router();
-// require my workout model
-const Fitness = require(`/api/workouts`, (req, res) => {
+//requiring my workout model and calling it fitness to avoid "workout" confusion
+const Fitness = require(`../models/index.js`);
+
+//creating my workout
+router.post(`/api/workouts`, (req, res) => {
   Fitness.create({}).then((dbWorkouts) => {
     res.json(dbWorkouts);
   });
 });
 
-// finding workout I created and updating it with the clients responses
+//findng the workout I just created an updating it with the clients responses
 router.put("/api/workouts/:id", ({ body, params }, res) => {
   Fitness.findByIdAndUpdate(params.id, { $push: { exercises: body } }).then(
     (dbWorkouts) => {
@@ -16,14 +19,14 @@ router.put("/api/workouts/:id", ({ body, params }, res) => {
   );
 });
 
-// finding last workout
+//finding last workout
 router.get("/api/workouts", (req, res) => {
   Fitness.find().then((dbWorkouts) => {
     res.json(dbWorkouts);
   });
 });
 
-// finding all workouts for the stats page
+//finding all workouts for the stats page
 router.get("/api/workouts/range", ({ query }, res) => {
   Fitness.find().then((dbWorkouts) => {
     res.json(dbWorkouts);
